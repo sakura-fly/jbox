@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>细胞盒子</title>
+    <script type="application/javascript" src="lib/vue.js"></script>
+    <link rel="stylesheet" href="lib/element_index.css">
+    <script type="application/javascript" src="lib/element_index.js"></script>
+
+</head>
+<body>
+
+<div id="app">
+    <el-button type="primary" v-for='(btn,i) in btns' @click="open(i)">{{btn}}</el-button>
+
+    <el-dialog
+            :title="boxTitle"
+            :visible.sync="dialogVisible"
+            width="30%">
+        <div v-for="(boxv, bv) in boxs[boxIndex]">
+            <el-button type="primary" v-for='(btn, bh) in boxv' @click="openMsg(bv,bh)">{{btn}}</el-button>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+        </span>
+    </el-dialog>
+
+    <el-dialog
+            :title="msgTitle"
+            :visible.sync="msgVisible"
+            width="50%">
+        <span>
+            {{msg}}
+        </span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="msgVisible = false">取 消</el-button>
+        </span>
+    </el-dialog>
+
+</div>
+
+</body>
+</html>
+
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            btns: [
+                '盒子1', '盒子2', '盒子3', '盒子4'
+            ],
+            boxs: [
+                [
+                    ['1,1', '1,2', '1,3'],
+                    ['1,4', '1,5', '1,6'],
+                    ['1,7', '1,8', '1,9']
+                ],
+                [
+                    ['2.1', '2.2', '2.3'],
+                    ['2.4', '2.5', '2.6'],
+                    ['2.7', '2.8', '2.9']
+                ],
+                [
+                    ['3.1', '3.2', '3.3'],
+                    ['3.4', '3.5', '3.6'],
+                    ['3.7', '3.8', '3.9']
+                ],
+                [
+                    ['4.1', '4.2', '4.3'],
+                    ['4.4', '4.5', '4.6'],
+                    ['4.7', '4.8', '4.9']
+                ]
+            ],
+            boxIndex: 0,
+            msg: '信息信息信息信息信息信息信息信息信息信息信息',
+            dialogVisible: false,
+            msgVisible: false,
+            boxTitle: '',
+            msgTitle: ''
+        },
+        methods: {
+            open(i) {
+                this.boxIndex = i
+                this.boxTitle = this.btns[i]
+                this.dialogVisible = true
+            },
+            openMsg(bv, bh) {
+                this.msgTitle = this.boxs[this.boxIndex][bv][bh]
+                this.msgVisible = true
+
+            }
+        }
+    })
+</script>
