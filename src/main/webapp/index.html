@@ -15,6 +15,7 @@
 
 <div id="app">
     <el-button type="primary" v-for='(btn,i) in btns' @click="open(i)">{{btn}}</el-button>
+    <el-button class="el-icon-circle-plus-outline"></el-button>
 
     <el-dialog
             :title="boxTitle"
