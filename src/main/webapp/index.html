@@ -16,6 +16,7 @@
 <div id="app">
     <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>
     <el-button type="primary" @click="addMsgVisible = true" class="el-icon-circle-plus-outline"></el-button>
+    <el-input v-model="t.b[0][0]"></el-input>
 
     <el-dialog
             :title="boxTitle"
@@ -45,25 +46,22 @@
             title="添加"
             :visible.sync="addMsgVisible"
             width="50%">
-        <el-form>
-            <el-row v-for="i in box.box" :gutter="20">
+
+        <el-form :model="box">
+            <el-row v-for="(bv, i) in box.box" :gutter="20">
                 <el-col :offset="3">
-                    <el-col :span="2" v-for='j in i'>
-                        <el-form-item>
-                            <!--<el-input></el-input>-->
-                            <el-button type="primary" >233</el-button>
+                    <el-col :span="2" v-for='(bh, j) in bv'>
+                        <el-form-item label="">
+                            <el-input v-model="box.box[i][j]"></el-input>
+                            <!--<el-button v-model="box.box[i][j]" type="primary" >233</el-button>-->
                         </el-form-item>
                     </el-col>
                 </el-col>
             </el-row>
         </el-form>
-        <!--<el-form-item v-for='j in i' >-->
-
-        <!--<el-input with = 30px :span="2"></el-input>-->
-        <!--</el-form-item>-->
-        <!--</el-form>-->
         <span slot="footer" class="dialog-footer">
             <el-button @click="addMsgVisible = false">取 消</el-button>
+            <el-button @click="addMsg">确 定</el-button>
         </span>
     </el-dialog>
 
@@ -102,17 +100,26 @@
             addMsgVisible: false,
             boxTitle: '',
             msgTitle: '',
-            box: {}
+            box: {},
+            t: {b: [[], []]}
         },
         beforeCreate: function () {
+            console.log(this.box)
 
         },
         mounted: function () {
-            var box = new Array(9)
-            for (var i = 0; i < box.length; i++) {
-                box[i] = new Array(9)
+            var box = []
+            for (var i = 0; i < 9; i++) {
+                box[i] = []
+                for (var j = 0; j < 9; j++) {
+                    box[i][j] = '233'
+
+                }
             }
+            this.t.b = [[], []]
             this.box.box = box
+            console.log(this.box)
+            console.log(this.t)
         },
         methods: {
             open(btn) {
@@ -128,6 +135,14 @@
                 this.msgVisible = true
 
             },
+            addMsg() {
+                console.log(this.box)
+            },
+            change(e) {
+                console.log(2)
+                console.log(e)
+                this.$forceUpdate()
+            }
         }
     })
 </script>
