@@ -7,7 +7,7 @@
     <session-factory>
 
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://120.76.56.158:3306/sh?useUnicode=true&amp;characterEncoding=UTF-8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
+        <property name="connection.url">jdbc:mysql://120.76.56.158:3306/jbox?useUnicode=true&amp;characterEncoding=UTF-8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
         <property name="connection.username">root</property>
         <property name="connection.password">Zdh666Gqy@@</property>
         <!--<property name="connection.password">JIUbugaosuni::</property>-->
@@ -18,9 +18,8 @@
         <property name="hibernate.c3p0.max_size">100</property>
         <property name="hibernate.c3p0.min_size">2</property>
 
-        <!--<mapping class="com.schoolhepler.model.Junk"/>-->
-        <!--<mapping class="com.schoolhepler.model.LostThing"/>-->
-        <!--<mapping class="com.schoolhepler.model.User"/>-->
+        <mapping class="com.jbox.model.Box"/>
+        <mapping class="com.jbox.model.ElementMsg"/>
 
 
     </session-factory>
