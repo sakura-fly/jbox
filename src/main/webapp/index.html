@@ -16,7 +16,7 @@
 <body>
 
 <div id="app">
-    <el-button type="primary" v-for='btn in btns' @click="openBox">{{btn.name}}</el-button>
+    <el-button type="primary" v-for='btn in boxs' @click="openBox">{{btn.name}}</el-button>
     <!--    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>-->
     <el-button type="primary" @click="addMsgVisible = true;isAdd = true"
                class="el-icon-circle-plus-outline"></el-button>
@@ -54,8 +54,8 @@
                 <el-col :offset="3">
                     <el-col :span="2" v-for='(bh, j) in bv'>
                         <el-form-item label="">
-                            <el-input v-model="box.box[i][j].name"></el-input>
-                            <!--<el-button v-model="box.box[i][j]" type="primary" >233</el-button>-->
+                            <el-input v-if="isAdd" v-model="box.box[i][j].name"></el-input>
+                            <el-button v-else type="primary" >{{box.box[i][j].name}}</el-button>
                         </el-form-item>
                     </el-col>
                 </el-col>
@@ -77,24 +77,7 @@
     new Vue({
         el: '#app',
         data: {
-            btns: [
-                {
-                    name: '盒子1',
-                    box: [
-                        ['1,1', '1,2', '1,3'],
-                        ['1,4', '1,5', '1,6'],
-                        ['1,7', '1,8', '1,9']
-                    ]
-                },
-                {
-                    name: '盒子2',
-                    box: [
-                        ['2.1', '2.2', '2.3'],
-                        ['2.4', '2.5', '2.6'],
-                        ['2.7', '2.8', '2.9']
-                    ]
-                }
-            ],
+            boxs:[],
             boxIndex: 0,
             msg: '信息信息信息信息信息信息信息信息信息信息信息',
             dialogVisible: false,
@@ -113,6 +96,8 @@
         },
         mounted: function () {
             this.initBox()
+            this.boxList()
+            console.log(this.boxs)
         },
         methods: {
             open(btn) {
@@ -159,17 +144,23 @@
                 this.box.box = box
                 this.box.name = ''
             },
-            openBox() {
-                this.addMsgVisible = true
-                this.isAdd = false
-
+            boxList() {
+                var _this = this
                 axios.get("box")
                     .then(function (value) {
-                        console.log(value)
+                        console.log(this.boxs)
+                        _this.boxs = value.data
+
                     })
                     .catch(function (reason) {
                         console.log(reason)
                     })
+            },
+            openBox() {
+                this.addMsgVisible = true
+                this.isAdd = false
+
+
             }
 
         }
