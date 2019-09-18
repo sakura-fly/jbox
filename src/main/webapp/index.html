@@ -14,9 +14,9 @@
 <body>
 
 <div id="app">
-    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>
-    <el-button type="primary" @click="addMsgVisible = true" class="el-icon-circle-plus-outline"></el-button>
-    <el-input v-model="t.b[0][0]"></el-input>
+    <el-button type="primary" v-for='btn in btns' @click="addMsgVisible = true;isAdd = false">{{btn.name}}</el-button>
+<!--    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>-->
+    <el-button type="primary" @click="addMsgVisible = true;isAdd = true" class="el-icon-circle-plus-outline"></el-button>
 
     <el-dialog
             :title="boxTitle"
@@ -30,22 +30,23 @@
         </span>
     </el-dialog>
 
-    <el-dialog
-            :title="msgTitle"
-            :visible.sync="msgVisible"
-            width="50%">
-        <span>
-            {{msg}}
-        </span>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="msgVisible = false">取 消</el-button>
-        </span>
-    </el-dialog>
+<!--    <el-dialog-->
+<!--            :title="msgTitle"-->
+<!--            :visible.sync="msgVisible"-->
+<!--            width="50%">-->
+<!--        <span>-->
+<!--            {{msg}}-->
+<!--        </span>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--            <el-button @click="msgVisible = false">取 消</el-button>-->
+<!--        </span>-->
+<!--    </el-dialog>-->
 
     <el-dialog
-            title="添加"
+            :title="isAdd ? '添加' : boxTitle"
             :visible.sync="addMsgVisible"
-            width="50%">
+            @close="boxClose"
+            width="80%">
 
         <el-form :model="box">
             <el-row v-for="(bv, i) in box.box" :gutter="20">
@@ -61,7 +62,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="addMsgVisible = false">取 消</el-button>
-            <el-button @click="addMsg">确 定</el-button>
+            <el-button v-if="isAdd" @click="addMsg">确 定</el-button>
         </span>
     </el-dialog>
 
@@ -98,28 +99,18 @@
             dialogVisible: false,
             msgVisible: false,
             addMsgVisible: false,
-            boxTitle: '',
-            msgTitle: '',
-            box: {},
-            t: {b: [[], []]}
+            boxTitle: 'boxTitle',
+            msgTitle: 'msgTitle',
+            box: {
+                box:[[]]
+            },
+            isAdd:false
         },
         beforeCreate: function () {
-            console.log(this.box)
 
         },
         mounted: function () {
-            var box = []
-            for (var i = 0; i < 9; i++) {
-                box[i] = []
-                for (var j = 0; j < 9; j++) {
-                    box[i][j] = '233'
-
-                }
-            }
-            this.t.b = [[], []]
-            this.box.box = box
-            console.log(this.box)
-            console.log(this.t)
+            this.initBox()
         },
         methods: {
             open(btn) {
@@ -138,11 +129,17 @@
             addMsg() {
                 console.log(this.box)
             },
-            change(e) {
-                console.log(2)
-                console.log(e)
-                this.$forceUpdate()
+            boxClose() {
+                this.initBox()
+            },
+            initBox() {
+                var box = []
+                for (var i = 0; i < 9; i++) {
+                    box[i] = new Array(9)
+                }
+                this.box.box = box
             }
+
         }
     })
 </script>
