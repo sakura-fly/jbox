@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BoxDao extends BaseDaoImpl<Box> {
     public BoxDao() {
-        super.table = "Bos";
+        super.table = "Box";
     }
 }

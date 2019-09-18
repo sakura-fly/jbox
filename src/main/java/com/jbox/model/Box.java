@@ -20,7 +20,7 @@ public class Box {
     private BoxElement[][] box;
 
     public Box() {
-        box = new BoxElement[9][9];
+
     }
 
     public int getId() {
@@ -57,6 +57,17 @@ public class Box {
     }
 
     public void init() {
+        if (box != null) {
+            for (BoxElement[] bes : box) {
+                for (BoxElement be : bes) {
+                    be.setUid(UUID.randomUUID().toString());
+                }
+            }
+            boxElementStr = new Gson().toJson(box);
+        }
+    }
+
+    public void boxStrInit() {
         if (box != null) {
             for (BoxElement[] bes : box) {
                 for (BoxElement be : bes) {

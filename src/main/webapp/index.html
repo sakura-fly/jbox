@@ -16,25 +16,26 @@
 <body>
 
 <div id="app">
-    <el-button type="primary" v-for='btn in btns' @click="addMsgVisible = true;isAdd = false">{{btn.name}}</el-button>
+    <el-button type="primary" v-for='btn in btns' @click="openBox">{{btn.name}}</el-button>
     <!--    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>-->
     <el-button type="primary" @click="addMsgVisible = true;isAdd = true"
                class="el-icon-circle-plus-outline"></el-button>
 
-    <el-dialog
-            :title="boxTitle"
-            :visible.sync="dialogVisible"
-            width="30%">
-        <div v-for="boxv in box.box">
-            <el-button type="primary" v-for='bh in boxv' @click="openMsg(bh)">{{bh}}</el-button>
-        </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-        </span>
-    </el-dialog>
+<!--    <el-dialog-->
+<!--            :title="boxTitle"-->
+<!--            :visible.sync="dialogVisible"-->
+<!--            width="30%">-->
+<!--        <div v-for="boxv in box.box">-->
+<!--            <el-button type="primary" v-for='bh in boxv' @click="openMsg(bh)">{{bh}}</el-button>-->
+<!--        </div>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--            <el-button @click="dialogVisible = false">取 消</el-button>-->
+<!--        </span>-->
+<!--    </el-dialog>-->
 
 
     <el-dialog
+            id="box"
             :title="isAdd ? '添加' : box.name"
             :visible.sync="addMsgVisible"
             @close="boxClose"
@@ -102,7 +103,8 @@
             boxTitle: 'boxTitle',
             msgTitle: 'msgTitle',
             box: {
-                box: [[]]
+                box: [[]],
+                name:''
             },
             isAdd: false
         },
@@ -130,6 +132,13 @@
                 console.log(this.box)
                 axios.post("box", this.box)
                     .then(function (value) {
+                        if (value.data === 1) {
+                            alert("添加成功")
+                            this.addMsgVisible = false
+
+                        } else {
+                            alert("添加失败")
+                        }
                         console.log(value)
                     })
                     .catch(function (reason) {
@@ -137,7 +146,7 @@
                     })
             },
             boxClose() {
-                // this.initBox()
+                this.initBox()
             },
             initBox() {
                 var box = []
@@ -148,6 +157,19 @@
                     }
                 }
                 this.box.box = box
+                this.box.name = ''
+            },
+            openBox() {
+                this.addMsgVisible = true
+                this.isAdd = false
+
+                axios.get("box")
+                    .then(function (value) {
+                        console.log(value)
+                    })
+                    .catch(function (reason) {
+                        console.log(reason)
+                    })
             }
 
         }
