@@ -1,11 +1,17 @@
 package com.jbox.dao;
 
-import javax.persistence.*;
 
+import org.springframework.stereotype.Repository;
 
-public class BaseDao {
+import java.util.List;
+import java.util.Map;
 
+@Repository
+public interface BaseDao<T> {
 
+    int add(T t);
+
+    List<T> list(T t);
 
 
 }

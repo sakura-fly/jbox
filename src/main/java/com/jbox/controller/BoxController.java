@@ -1,12 +1,23 @@
 package com.jbox.controller;
 
+import com.jbox.dao.BaseDao;
+import com.jbox.model.Box;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/box")
-public class BoxController {
+public class BoxController extends BaseController<Box> {
 
 
+    public BoxController(BaseDao<Box> baseDao) {
+        super(baseDao);
+    }
 
+    @Override
+    public int add(@RequestBody Box box) {
+        box.init();
+        return super.add(box);
+    }
 }

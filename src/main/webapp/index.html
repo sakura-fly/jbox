@@ -9,14 +9,17 @@
     <script type="application/javascript" src="lib/vue.js"></script>
     <link rel="stylesheet" href="lib/element_index.css">
     <script type="application/javascript" src="lib/element_index.js"></script>
+    <script type="application/javascript" src="lib/axios.js"></script>
+    <script type="application/javascript" src="lib/qs.js"></script>
 
 </head>
 <body>
 
 <div id="app">
     <el-button type="primary" v-for='btn in btns' @click="addMsgVisible = true;isAdd = false">{{btn.name}}</el-button>
-<!--    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>-->
-    <el-button type="primary" @click="addMsgVisible = true;isAdd = true" class="el-icon-circle-plus-outline"></el-button>
+    <!--    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>-->
+    <el-button type="primary" @click="addMsgVisible = true;isAdd = true"
+               class="el-icon-circle-plus-outline"></el-button>
 
     <el-dialog
             :title="boxTitle"
@@ -30,30 +33,27 @@
         </span>
     </el-dialog>
 
-<!--    <el-dialog-->
-<!--            :title="msgTitle"-->
-<!--            :visible.sync="msgVisible"-->
-<!--            width="50%">-->
-<!--        <span>-->
-<!--            {{msg}}-->
-<!--        </span>-->
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--            <el-button @click="msgVisible = false">取 消</el-button>-->
-<!--        </span>-->
-<!--    </el-dialog>-->
 
     <el-dialog
-            :title="isAdd ? '添加' : boxTitle"
+            :title="isAdd ? '添加' : box.name"
             :visible.sync="addMsgVisible"
             @close="boxClose"
             width="80%">
 
         <el-form :model="box">
+            <el-row v-if="isAdd">
+                <el-col :offset="3" :span="6">
+                    <el-form-item label="">
+                        <el-input v-model="box.name" placeholder="请输入名称"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
             <el-row v-for="(bv, i) in box.box" :gutter="20">
                 <el-col :offset="3">
                     <el-col :span="2" v-for='(bh, j) in bv'>
                         <el-form-item label="">
-                            <el-input v-model="box.box[i][j]"></el-input>
+                            <el-input v-model="box.box[i][j].name"></el-input>
                             <!--<el-button v-model="box.box[i][j]" type="primary" >233</el-button>-->
                         </el-form-item>
                     </el-col>
@@ -102,9 +102,9 @@
             boxTitle: 'boxTitle',
             msgTitle: 'msgTitle',
             box: {
-                box:[[]]
+                box: [[]]
             },
-            isAdd:false
+            isAdd: false
         },
         beforeCreate: function () {
 
@@ -128,14 +128,24 @@
             },
             addMsg() {
                 console.log(this.box)
+                axios.post("box", this.box)
+                    .then(function (value) {
+                        console.log(value)
+                    })
+                    .catch(function (reason) {
+                        console.log(reason)
+                    })
             },
             boxClose() {
-                this.initBox()
+                // this.initBox()
             },
             initBox() {
                 var box = []
                 for (var i = 0; i < 9; i++) {
-                    box[i] = new Array(9)
+                    box[i] = []
+                    for (var j = 0; j < 9; j++) {
+                        box[i][j] = {}
+                    }
                 }
                 this.box.box = box
             }

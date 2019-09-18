@@ -1,6 +1,9 @@
 package com.jbox.model;
 
+import com.google.gson.Gson;
+
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -11,12 +14,13 @@ public class Box {
 
     private String name;
 
+    @Column(columnDefinition="TEXT")
     private String boxElementStr;
     @Transient
-    private BoxElement[][] boxElements;
+    private BoxElement[][] box;
 
     public Box() {
-        boxElements = new BoxElement[9][9];
+        box = new BoxElement[9][9];
     }
 
     public int getId() {
@@ -36,12 +40,12 @@ public class Box {
         this.boxElementStr = boxElementStr;
     }
 
-    public BoxElement[][] getBoxElements() {
-        return boxElements;
+    public BoxElement[][] getBox() {
+        return box;
     }
 
-    public void setBoxElements(BoxElement[][] boxElements) {
-        this.boxElements = boxElements;
+    public void setBox(BoxElement[][] box) {
+        this.box = box;
     }
 
     public String getName() {
@@ -50,5 +54,16 @@ public class Box {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void init() {
+        if (box != null) {
+            for (BoxElement[] bes : box) {
+                for (BoxElement be : bes) {
+                    be.setUid(UUID.randomUUID().toString());
+                }
+            }
+            boxElementStr = new Gson().toJson(box);
+        }
     }
 }
