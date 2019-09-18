@@ -16,7 +16,7 @@
 <body>
 
 <div id="app">
-    <el-button type="primary" v-for='btn in boxs' @click="openBox">{{btn.name}}</el-button>
+    <el-button type="primary" v-for='btn in boxs' @click="openBox(btn)">{{btn.name}}</el-button>
     <!--    <el-button type="primary" v-for='btn in btns' @click="open(btn)">{{btn.name}}</el-button>-->
     <el-button type="primary" @click="addMsgVisible = true;isAdd = true"
                class="el-icon-circle-plus-outline"></el-button>
@@ -35,7 +35,7 @@
 
 
     <el-dialog
-            id="box"
+            id="boxDialog"
             :title="isAdd ? '添加' : box.name"
             :visible.sync="addMsgVisible"
             @close="boxClose"
@@ -50,12 +50,12 @@
                 </el-col>
             </el-row>
 
-            <el-row v-for="(bv, i) in box.box" :gutter="20">
+            <el-row v-for="bv in box.box" :gutter="20">
                 <el-col :offset="3">
-                    <el-col :span="2" v-for='(bh, j) in bv'>
+                    <el-col :span="2" v-for='bh in bv'>
                         <el-form-item label="">
-                            <el-input v-if="isAdd" v-model="box.box[i][j].name"></el-input>
-                            <el-button v-else type="primary" >{{box.box[i][j].name}}</el-button>
+                            <el-input v-if="isAdd" v-model="bh.name"></el-input>
+                            <el-button v-else type="primary" >{{bh.name}}</el-button>
                         </el-form-item>
                     </el-col>
                 </el-col>
@@ -86,8 +86,11 @@
             boxTitle: 'boxTitle',
             msgTitle: 'msgTitle',
             box: {
-                box: [[]],
-                name:''
+                box: [
+                    [{name:"233"}],[{name:""}],
+                    [{name:""}],[{name:""}]
+                ],
+                name:""
             },
             isAdd: false
         },
@@ -97,15 +100,12 @@
         mounted: function () {
             this.initBox()
             this.boxList()
-            console.log(this.boxs)
         },
         methods: {
             open(btn) {
-                console.log(btn)
                 // this.boxIndex = i
                 this.boxTitle = btn.name
                 this.box = btn
-                console.log(this.box)
                 this.dialogVisible = true
             },
             openMsg(bh) {
@@ -114,17 +114,16 @@
 
             },
             addMsg() {
-                console.log(this.box)
+                var _this = this
                 axios.post("box", this.box)
                     .then(function (value) {
                         if (value.data === 1) {
                             alert("添加成功")
-                            this.addMsgVisible = false
-
+                            _this.addMsgVisible = false
+                            _this.boxList()
                         } else {
                             alert("添加失败")
                         }
-                        console.log(value)
                     })
                     .catch(function (reason) {
                         console.log(reason)
@@ -138,7 +137,7 @@
                 for (var i = 0; i < 9; i++) {
                     box[i] = []
                     for (var j = 0; j < 9; j++) {
-                        box[i][j] = {}
+                        box[i][j] = {name:""}
                     }
                 }
                 this.box.box = box
@@ -148,18 +147,21 @@
                 var _this = this
                 axios.get("box")
                     .then(function (value) {
-                        console.log(this.boxs)
+                        for (i in value.data) {
+                            value.data[i].box = JSON.parse(value.data[i].boxElementStr)
+                        }
                         _this.boxs = value.data
-
+                        // console.log(value.data.boxElementStr)
+                        // _this.boxs.box = JSON.parse(value.data.boxElementStr)
                     })
                     .catch(function (reason) {
                         console.log(reason)
                     })
             },
-            openBox() {
+            openBox(b) {
                 this.addMsgVisible = true
                 this.isAdd = false
-
+                this.box = JSON.parse(JSON.stringify(b))
 
             }
 
