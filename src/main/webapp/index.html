@@ -72,6 +72,7 @@
             id="bmsg"
             :title="msgTitle"
             :visible.sync="msgVisible"
+            @close="bmsgClose"
             width="30%">
         <div>
             <span class="el-icon-edit-outline" style="float:right" @click="isEditMsg = !isEditMsg"></span><br>
@@ -80,18 +81,17 @@
                     type="textarea"
                     :rows="5"
                     placeholder="请输入信息"
-                    v-model="msg"
-                    @close="bmsgClose()"
+                    v-model="bMsg.msg"
             >
             </el-input>
             <span v-if="!isEditMsg">
 
-                {{msg}}
+                {{bMsg.msg}}
             </span>
 
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button v-if="isEditMsg" @click="msgVisible = false">提 交</el-button>
+            <el-button v-if="isEditMsg" @click="submitMsg">提 交</el-button>
             <el-button @click="msgVisible = false">取 消</el-button>
         </span>
     </el-dialog>
@@ -145,17 +145,27 @@
             openMsg(bh) {
                 this.msgTitle = bh.name
                 this.msgVisible = true
+                this.isEditMsg = false
                 this.bMsg.eluid = bh.uid
+                var _this = this
                 axios.get("msg", {params: this.bMsg})
                     .then(function (value) {
-                        console.log(value)
-                        // if (value.data === 1) {
-                        //     alert("添加成功")
-                        //     _this.addMsgVisible = false
-                        //     _this.boxList()
-                        // } else {
-                        //     alert("添加失败")
-                        // }
+                        _this.bMsg = value.data.length > 0 ? value.data[0] : _this.bMsg
+                    })
+                    .catch(function (reason) {
+                        console.log(reason)
+                    })
+            },
+            submitMsg() {
+                axios.post("msg", this.bMsg)
+                    .then(function (value) {
+                        if (value.data === 1) {
+                            alert("提交成功")
+                            // _this.addMsgVisible = false
+                            // _this.boxList()
+                        } else {
+                            alert("提交失败")
+                        }
                     })
                     .catch(function (reason) {
                         console.log(reason)
@@ -199,8 +209,6 @@
                             value.data[i].box = JSON.parse(value.data[i].boxElementStr)
                         }
                         _this.boxs = value.data
-                        // console.log(value.data.boxElementStr)
-                        // _this.boxs.box = JSON.parse(value.data.boxElementStr)
                     })
                     .catch(function (reason) {
                         console.log(reason)
@@ -213,7 +221,6 @@
 
             },
             bmsgClose() {
-                this.isEditMsg = false;
                 this.bMsg = {
                     msg: "",
                     eluid: ""

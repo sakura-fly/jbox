@@ -25,7 +25,7 @@ public class BaseController<T> {
     @PostMapping
     @ResponseBody
     public int add(@RequestBody T t) {
-        return baseDao.add(t);
+        return baseDao.saveOrUpdate(t);
     }
 
 

@@ -8,7 +8,7 @@ public class ElementMsg {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String eluid;
     private String msg;
 

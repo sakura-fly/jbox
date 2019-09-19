@@ -2,6 +2,7 @@ package com.jbox.dao.impl;
 
 import com.jbox.dao.BaseDao;
 import com.jbox.util.DbUtil;
+import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,6 +27,38 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
         int stat = 1;
         try {
             session.save(t);
+            tt.commit();
+        } catch (Exception e) {
+            stat = -1;
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return stat;
+    }
+
+    public int saveOrUpdate(T t) {
+        Session session = sessionFactory.openSession();
+        Transaction tt = session.beginTransaction();
+        int stat = 1;
+        try {
+            session.saveOrUpdate (t);
+            tt.commit();
+        } catch (Exception e) {
+            stat = -1;
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return stat;
+    }
+
+    public int replicate(T t) {
+        Session session = sessionFactory.openSession();
+        Transaction tt = session.beginTransaction();
+        int stat = 1;
+        try {
+            session.replicate(t, ReplicationMode.EXCEPTION);
             tt.commit();
         } catch (Exception e) {
             stat = -1;
