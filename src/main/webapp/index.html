@@ -148,6 +148,17 @@
                 this.isEditMsg = false
                 this.bMsg.eluid = bh.uid
                 var _this = this
+                this.getMsg()
+                // axios.get("msg", {params: this.bMsg})
+                //     .then(function (value) {
+                //         _this.bMsg = value.data.length > 0 ? value.data[0] : _this.bMsg
+                //     })
+                //     .catch(function (reason) {
+                //         console.log(reason)
+                //     })
+            },
+            getMsg(){
+                var _this = this
                 axios.get("msg", {params: this.bMsg})
                     .then(function (value) {
                         _this.bMsg = value.data.length > 0 ? value.data[0] : _this.bMsg
@@ -157,10 +168,13 @@
                     })
             },
             submitMsg() {
+                var _this = this
                 axios.post("msg", this.bMsg)
                     .then(function (value) {
                         if (value.data === 1) {
                             alert("提交成功")
+                            _this.isEditMsg = false
+                            _this.getMsg()
                             // _this.addMsgVisible = false
                             // _this.boxList()
                         } else {
