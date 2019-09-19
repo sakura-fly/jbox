@@ -69,16 +69,31 @@
 
 
     <el-dialog
+            id="bmsg"
             :title="msgTitle"
             :visible.sync="msgVisible"
             width="30%">
         <div>
-            <span ></span>
-            {{msg}}
+            <span class="el-icon-edit-outline" style="float:right" @click="isEditMsg = !isEditMsg"></span><br>
+            <el-input
+                    v-if="isEditMsg"
+                    type="textarea"
+                    :rows="5"
+                    placeholder="请输入信息"
+                    v-model="msg"
+                    @close="bmsgClose()"
+            >
+            </el-input>
+            <span v-if="!isEditMsg">
+
+                {{msg}}
+            </span>
+
         </div>
         <span slot="footer" class="dialog-footer">
-                <el-button @click="msgVisible = false">取 消</el-button>
-            </span>
+            <el-button v-if="isEditMsg" @click="msgVisible = false">提 交</el-button>
+            <el-button @click="msgVisible = false">取 消</el-button>
+        </span>
     </el-dialog>
 
 </div>
@@ -93,7 +108,7 @@
         data: {
             boxs: [],
             boxIndex: 0,
-            msg: '信息信息信息信息信息信息信息信息信息信息信息',
+            msg: '信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息信息',
             dialogVisible: false,
             msgVisible: false,
             addMsgVisible: false,
@@ -106,7 +121,12 @@
                 ],
                 name: ""
             },
-            isAdd: false
+            isAdd: false,
+            isEditMsg: false,
+            bMsg: {
+                msg: "",
+                eluid: ""
+            }
         },
         beforeCreate: function () {
 
@@ -125,7 +145,21 @@
             openMsg(bh) {
                 this.msgTitle = bh.name
                 this.msgVisible = true
-
+                this.bMsg.eluid = bh.uid
+                axios.get("msg", {params: this.bMsg})
+                    .then(function (value) {
+                        console.log(value)
+                        // if (value.data === 1) {
+                        //     alert("添加成功")
+                        //     _this.addMsgVisible = false
+                        //     _this.boxList()
+                        // } else {
+                        //     alert("添加失败")
+                        // }
+                    })
+                    .catch(function (reason) {
+                        console.log(reason)
+                    })
             },
             addMsg() {
                 var _this = this
@@ -178,6 +212,13 @@
                 this.box = JSON.parse(JSON.stringify(b))
 
             },
+            bmsgClose() {
+                this.isEditMsg = false;
+                this.bMsg = {
+                    msg: "",
+                    eluid: ""
+                }
+            }
 
         }
     })

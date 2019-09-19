@@ -36,8 +36,11 @@ public class DbUtil {
 
                 if (sb.length() == 0) {
                     sb.append(" where");
+                } else {
+                    sb.append(" and");
+
                 }
-                sb.append(" ").append(k).append(" is ").append(oMap.get(k));
+                sb.append(" ").append(k).append(" = ").append("?");
             }
         }
         return sb.toString();
@@ -46,11 +49,14 @@ public class DbUtil {
     private static boolean checkValue(Object o) {
         return o != null
                 && (!(o instanceof String) || !((String) o).isEmpty())
-                && ((!(o instanceof Integer) || (Integer) o != 0) && (!(o instanceof Float) || (Float) o != 0.0F)
-                && (!(o instanceof Double) || (Double) o != 0.0d) && (!(o instanceof Long) || (Long) o != 0L)
-                && (!(o instanceof Byte) || (Byte) o != 0) && (!(o instanceof Short) || (Short) o != 0)
-                && (!(o instanceof Character) || (Character) o != '\u0000'))
-                && (!(o instanceof List || !(((List)o).size() == 0)));
+                && (!(o instanceof Integer) || (Integer) o != 0)
+                && (!(o instanceof Float) || (Float) o != 0.0F)
+                && (!(o instanceof Double) || (Double) o != 0.0d)
+                && (!(o instanceof Long) || (Long) o != 0L)
+                && (!(o instanceof Byte) || (Byte) o != 0)
+                && (!(o instanceof Short) || (Short) o != 0)
+                && (!(o instanceof Character) || (Character) o != '\u0000')
+                && (!(o instanceof List) || ((List)o).size() != 0);
 
     }
 
