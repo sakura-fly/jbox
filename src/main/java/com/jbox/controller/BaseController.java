@@ -3,6 +3,7 @@ package com.jbox.controller;
 import com.jbox.dao.BaseDao;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class BaseController<T> {
 
     @PostMapping
     @ResponseBody
-    public int add(T t) {
+    public int add(@RequestBody T t) {
         return baseDao.add(t);
     }
 

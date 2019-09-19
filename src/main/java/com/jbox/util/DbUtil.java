@@ -18,7 +18,7 @@ public class DbUtil {
         int i = 1;
         for (Object k : ks) {
             if (checkValue(oMap.get(k))){
-                sql.setParameter(i, k);
+                sql.setParameter(i, oMap.get(k));
                 i++;
             }
         }
